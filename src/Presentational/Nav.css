@@ -1,0 +1,21 @@
+.nav button {
+  margin-right: 50px;
+  margin-bottom: 20px;
+  width: 130px;
+  height: 50px;
+  border-radius: 10px;
+  border: 2px solid lightblue;
+  text-transform: uppercase;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.nav button:hover {
+  background-color: lightblue;
+  color: white;
+  cursor: pointer;
+}
+
+.nav button:focus {
+  outline: none;
+}
