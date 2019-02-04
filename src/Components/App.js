@@ -1,30 +1,27 @@
-import React, { Component } from "react";
-import Board from "../Presentational/Board";
-import Nav from "../Presentational/Nav";
-import sudoku from "sudoku-umd";
+import React, { Component } from 'react';
+import Board from '../Presentational/Board';
+import Nav from '../Presentational/Nav';
+import sudoku from 'sudoku-umd';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      initialBoard: localStorage.getItem("initialboard")
-        ? localStorage.getItem("initialboard")
-        : "",
-      board: localStorage.getItem("board") ? localStorage.getItem("board") : "",
-      error: "",
-      newGameClicked: false,
-      movesArray: localStorage.getItem("moves")
-        ? JSON.parse(localStorage.getItem("moves"))
-        : []
-    };
-  }
+  state = {
+    initialBoard: localStorage.getItem('initialboard')
+      ? localStorage.getItem('initialboard')
+      : '',
+    board: localStorage.getItem('board') ? localStorage.getItem('board') : '',
+    error: '',
+    newGameClicked: false,
+    movesArray: localStorage.getItem('moves')
+      ? JSON.parse(localStorage.getItem('moves'))
+      : []
+  };
 
   startNewGame(level) {
     const newGame = sudoku.generate(level);
     this.setState({
       board: newGame,
       initialBoard: newGame,
-      error: "",
+      error: '',
       newGameClicked: false
     });
     this.localStorageClearHandler();
@@ -32,9 +29,9 @@ class App extends Component {
 
   newGameHandler() {
     this.setState({
-      board: "",
-      initialBoard: "",
-      error: "",
+      board: '',
+      initialBoard: '',
+      error: '',
       newGameClicked: true
     });
   }
@@ -42,7 +39,7 @@ class App extends Component {
   restartNewGame() {
     this.setState({
       board: this.state.initialBoard,
-      error: ""
+      error: ''
     });
   }
 
@@ -50,12 +47,12 @@ class App extends Component {
     if (sudoku.solve(this.state.board)) {
       this.setState({
         board: sudoku.solve(this.state.board),
-        error: ""
+        error: ''
       });
     } else {
       this.setState({
         error:
-          "Sorry. Game can not be solved. Check if all numbers You entered are correct."
+          'Sorry. Game can not be solved. Check if all numbers You entered are correct.'
       });
     }
   }
@@ -63,12 +60,12 @@ class App extends Component {
   checkSudoku() {
     if (this.state.board !== this.state.initialBoard) {
       if (this.state.board === sudoku.solve(this.state.board)) {
-        this.setState({ error: "Congratulations!" });
+        this.setState({ error: 'Congratulations!' });
       } else if (sudoku.solve(this.state.board)) {
-        this.setState({ error: "Continue..." });
+        this.setState({ error: 'Continue...' });
       } else {
         this.setState({
-          error: "Check if all numbers You entered are correct."
+          error: 'Check if all numbers You entered are correct.'
         });
       }
     }
@@ -76,19 +73,18 @@ class App extends Component {
 
   onChangeHandler(value, id) {
     var array = this.state.board
-      .split("")
-      .map(
-        (tile, index) =>
-          index === parseInt(id, 0)
-            ? value !== "" && value < 10 && value > 0
-              ? value
-              : "."
-            : tile
+      .split('')
+      .map((tile, index) =>
+        index === parseInt(id, 0)
+          ? value !== '' && value < 10 && value > 0
+            ? value
+            : '.'
+          : tile
       )
-      .join("");
+      .join('');
     this.setState({
       board: array,
-      error: ""
+      error: ''
     });
     this.setMovesArray(id, value, array);
   }
@@ -100,20 +96,20 @@ class App extends Component {
   }
 
   localStorageHandler(currentGameState, allMoves) {
-    localStorage.setItem("board", currentGameState);
-    localStorage.setItem("initialboard", this.state.initialBoard);
-    localStorage.setItem("moves", JSON.stringify(allMoves));
+    localStorage.setItem('board', currentGameState);
+    localStorage.setItem('initialboard', this.state.initialBoard);
+    localStorage.setItem('moves', JSON.stringify(allMoves));
   }
 
   localStorageClearHandler() {
-    localStorage.clear("initialboard");
-    localStorage.clear("board");
-    localStorage.clear("moves");
+    localStorage.clear('initialboard');
+    localStorage.clear('board');
+    localStorage.clear('moves');
   }
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Nav
           newGameHandler={() => this.newGameHandler()}
           startNewGame={level => this.startNewGame(level)}
@@ -124,11 +120,11 @@ class App extends Component {
           newGameClicked={this.state.newGameClicked}
         />
         <Board
-          board={this.state.board.split("")}
-          initialBoard={this.state.initialBoard.split("")}
+          board={this.state.board.split('')}
+          initialBoard={this.state.initialBoard.split('')}
           onChange={(value, id) => this.onChangeHandler(value, id)}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }
